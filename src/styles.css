@@ -17,6 +17,7 @@
   --clay: #b35f4a;
   --blue: #617e91;
   --olive: #7b8654;
+  --yellow: #b5891b;
   font-family: Arial, Helvetica, sans-serif;
   background: var(--paper);
   color: var(--ink);
@@ -48,7 +49,8 @@ button { cursor: pointer; }
 .owner-chip strong, .owner-chip span { display: block; }
 .owner-chip strong { font-size: 11px; font-weight: 600; color: #e2e4dc; }
 .owner-chip span { color: #91a098; font-size: 10px; margin-top: 3px; }
-.reset-button { border: 0; background: transparent; padding: 0; margin-top: 24px; color: #a8b2aa; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.rail-actions { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 24px; }
+.reset-button { border: 0; background: transparent; padding: 0; color: #a8b2aa; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
 .reset-button:hover, .reset-button:focus-visible { color: var(--amber); }
 
 .main-content { min-width: 0; max-width: 1440px; width: 100%; padding: 36px clamp(24px, 4.5vw, 76px) 24px; }
@@ -133,6 +135,79 @@ button { cursor: pointer; }
 .cluster-college { font-size: 13px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cluster-remove { border: 0; background: transparent; color: var(--ink-muted); font-size: 18px; line-height: 1; padding: 0; height: 26px; }
 .cluster-remove:hover, .cluster-remove:focus-visible { color: var(--clay); outline: none; }
+.prospect-section { padding-top: 0; }
+.prospect-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+.prospect-summary .day-tile { border: 1px solid var(--line-dark); border-top-width: 3px; }
+.prospect-form { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; gap: 10px 12px; padding: 4px 0 16px; align-items: end; }
+.prospect-form .field-wide { grid-column: 1 / 4; }
+.prospect-form .cluster-add { grid-column: 4; align-self: end; }
+.field { display: block; min-width: 0; }
+.field span { display: block; margin-bottom: 6px; color: var(--ink-muted); font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.field .cluster-input { width: 100%; }
+.prospect-list { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line-dark); }
+.prospect-row { display: grid; grid-template-columns: minmax(120px, 1.1fr) minmax(90px, .8fr) 104px minmax(120px, 1.1fr) minmax(130px, 1.3fr) 26px; align-items: center; gap: 14px; min-height: 42px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+.prospect-row:last-child { border-bottom: 0; }
+.prospect-head { min-height: 30px; color: var(--ink-muted); font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid var(--ink); }
+.prospect-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prospect-contact, .prospect-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prospect-college, .prospect-remarks { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prospect-blank { color: #9aa49c; font-style: italic; }
+.status-prospect { --status-color: var(--yellow); }
+.status-visited { --status-color: var(--blue); }
+.status-dead { --status-color: var(--clay); }
+.status-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 18px; }
+.legend-item { display: flex; align-items: center; gap: 7px; color: var(--ink-soft); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.legend-swatch { width: 10px; height: 10px; background: var(--status-color); display: inline-block; }
+.prospect-calendar-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 24px; padding-bottom: 26px; }
+.backup-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px; padding: 14px 0 20px; border-top: 1px dashed var(--line-dark); }
+.backup-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; max-width: 46ch; }
+.backup-copy strong { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+.backup-copy span { color: var(--ink-muted); font-size: 12px; line-height: 1.5; }
+.backup-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.backup-button { cursor: pointer; }
+.backup-restore { position: relative; overflow: hidden; display: inline-flex; align-items: center; }
+.backup-restore input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.backup-restore:hover, .backup-restore:focus-within { background: var(--amber-deep); border-color: var(--amber-deep); }
+.dashboard-prospects { margin-top: 34px; }
+.dashboard-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 4px 0 14px; }
+.dashboard-action-note { color: var(--ink-muted); font-size: 12px; line-height: 1.5; }
+.dashboard-cleared { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; padding: 14px 0; }
+.dashboard-cleared p { margin: 0; max-width: 54ch; color: var(--ink-soft); font-size: 12.5px; line-height: 1.55; }
+.dashboard-cleared strong { color: var(--ink); }
+.visits-day-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 20px; padding: 22px 0 14px; border-top: 1px solid var(--ink); }
+.visits-day-head h2 { margin: 4px 0 0; font-size: 20px; letter-spacing: -.01em; }
+.calendar { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line-dark); }
+.calendar-head { display: grid; grid-template-columns: 32px 1fr 32px; align-items: center; gap: 8px; padding: 14px 0 12px; }
+.calendar-title { text-align: center; font-family: 'DM Serif Display', Georgia, serif; font-size: 21px; letter-spacing: -.02em; }
+.cal-nav { border: 1px solid var(--line); background: transparent; color: var(--ink-soft); height: 28px; padding: 0; display: grid; place-items: center; font-size: 14px; border-radius: 0; }
+.cal-nav:hover, .cal-nav:focus-visible { border-color: var(--amber-deep); color: var(--amber-deep); outline: none; }
+.cal-weekdays, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cal-weekdays span { padding: 0 0 8px; color: var(--ink-muted); font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; text-align: center; }
+.cal-day { position: relative; min-height: 58px; border: 0; border-top: 1px solid var(--line); border-right: 1px solid var(--line); background: transparent; padding: 6px 4px 5px; display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 0; }
+.cal-day:nth-child(7n) { border-right: 0; }
+.cal-day.empty { color: #b3bbb4; }
+.cal-day-number { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: inherit; }
+.cal-day.today .cal-day-number { color: var(--amber-deep); font-weight: 500; }
+.cal-day:hover, .cal-day:focus-visible { background: var(--paper-deep); outline: none; }
+.cal-day.selected { background: var(--ink); }
+.cal-day.selected .cal-day-number { color: var(--paper); }
+.cal-bubble { min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--amber); color: #1d1508; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; display: inline-grid; place-items: center; }
+.cal-dots { display: flex; gap: 3px; height: 6px; align-items: center; }
+.cal-dot { width: 6px; height: 6px; background: var(--status-color); display: inline-block; }
+.cal-day.selected .cal-dot { outline: 1px solid rgba(244, 240, 232, .45); }
+.day-panel { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line-dark); padding-bottom: 16px; }
+.day-panel-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; padding: 14px 0 14px; }
+.day-panel-head h3 { margin: 6px 0 0; font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; font-weight: 400; letter-spacing: -.02em; }
+.day-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.day-tile { border-top: 3px solid var(--status-color); background: var(--paper-bright); padding: 11px 12px 13px; }
+.day-tile.zero { background: var(--paper-deep); }
+.day-tile-label { display: block; color: var(--status-color); font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.day-tile.zero .day-tile-label { color: var(--ink-muted); }
+.day-tile-count { display: block; margin-top: 7px; font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 500; letter-spacing: -.05em; line-height: 1; }
+.status-select { border: 1px solid var(--line); background: var(--paper-bright); color: var(--status-color); font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 5px 6px; border-radius: 0; width: 100%; }
+.status-select:focus { border-color: var(--amber-deep); outline: none; }
+.prospect-row { grid-template-columns: minmax(120px, 1.1fr) minmax(90px, .8fr) 104px minmax(120px, 1.1fr) minmax(120px, 1.2fr) 96px 26px; }
+.prospect-row:not(.prospect-head) { box-shadow: inset 3px 0 0 var(--status-color); padding-left: 11px; }
 .report-block { margin-top: 22px; padding-top: 17px; border-top: 1px solid var(--line); }
 .report-operator { display: block; margin-bottom: 11px; }
 .report-operator span { display: block; margin-bottom: 6px; color: var(--ink-muted); font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
@@ -197,7 +272,7 @@ button { cursor: pointer; }
   .brand-lockup { padding: 0 0 15px; border-bottom: 0; }
   .rail-section { display: none; }
   .rail-footer { display: flex; justify-content: space-between; align-items: center; padding: 14px 0 0; border-top: 1px solid #3c4b46; }
-  .reset-button { margin-top: 0; }
+  .rail-actions { margin-top: 0; }
   .main-content { padding: 25px 18px 20px; }
   .topbar { display: block; }
   .topbar-meta { margin-top: 18px; flex-wrap: wrap; white-space: normal; }
@@ -220,6 +295,22 @@ button { cursor: pointer; }
   .lower-grid { display: block; }
   .note-panel { margin-top: 24px; }
   .cluster-form { grid-template-columns: 1fr; }
+  .prospect-form { grid-template-columns: 1fr 1fr; }
+  .prospect-form .field-wide { grid-column: 1 / -1; }
+  .prospect-form .cluster-add { grid-column: 1 / -1; }
+  .prospect-calendar-grid { grid-template-columns: 1fr; }
+  .backup-bar, .dashboard-actions, .dashboard-cleared, .visits-day-head { flex-direction: column; align-items: flex-start; }
+  .prospect-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .prospect-summary .day-tile { padding: 9px 8px 11px; }
+  .prospect-summary .day-tile-count { font-size: 24px; }
+  .cal-day { min-height: 50px; }
+  .prospect-list { display: block; }
+  .prospect-head { display: none; }
+  .prospect-row { grid-template-columns: minmax(0, 1fr) 26px; gap: 4px 10px; padding: 12px 0; }
+  .prospect-row > span { white-space: normal; }
+  .prospect-name { grid-column: 1; }
+  .prospect-contact, .prospect-date, .prospect-college, .prospect-remarks, .status-select { grid-column: 1; }
+  .prospect-row .cluster-remove { grid-column: 2; grid-row: 1; }
   .page-footer { flex-wrap: wrap; }
 }
 

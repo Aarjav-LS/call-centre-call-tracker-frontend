@@ -1,6 +1,7 @@
 {
   "routes": [
     { "path": "/", "title": "CallTrack dashboard" },
+    { "path": "/visits", "title": "Campus visits" },
     { "path": "/rhythm", "title": "Received rhythm" }
   ]
 }
