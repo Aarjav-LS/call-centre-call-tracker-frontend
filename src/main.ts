@@ -2,7 +2,6 @@ import "./styles.css";
 import {
   fetchRemoteState,
   isRemote,
-  resetRemoteState,
   saveRemoteState,
   submitReport,
   type ApiState,
@@ -380,24 +379,6 @@ function syncToServer(): void {
   }, 400);
 }
 
-async function resetEverywhere(): Promise<void> {
-  if (!isRemote) {
-    resetState();
-    return;
-  }
-  syncLabel = "Syncing reset";
-  render();
-  try {
-    const record = await resetRemoteState();
-    applyRemoteState(record.state);
-    syncLabel = "Synced with server";
-  } catch {
-    resetState();
-    syncLabel = "Reset failed, saved locally";
-  }
-  render();
-}
-
 function loadState(): CallState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -442,14 +423,6 @@ function setCount(key: keyof CallState, nextValue: number): void {
   saveState();
   render();
   syncToServer();
-}
-
-function resetState(): void {
-  const shouldReset = window.confirm(
-    "Reset this tracker to the starting sample counts?",
-  );
-  if (!shouldReset) return;
-  void resetEverywhere();
 }
 
 /** Zero every call counter, locally and on the server. */
@@ -981,7 +954,6 @@ function render(): void {
         <div class="owner-chip"><span class="owner-initials">AD</span><div><strong>Admissions desk</strong><span>Shift A / local mode</span></div></div>
         <div class="rail-actions">
           <button class="reset-button" data-action="clear-counters">Clear counts to 0</button>
-          <button class="reset-button" data-action="reset">Reset sample data</button>
         </div>
       </div>
     </aside>
@@ -1008,10 +980,6 @@ app.addEventListener("click", (event) => {
   const control = target.closest<HTMLElement>('[data-control="count"]');
   if (!actionElement) return;
   const action = actionElement.dataset.action;
-  if (action === "reset") {
-    resetState();
-    return;
-  }
   if (action === "clear-counters") {
     clearCountersToZero();
     return;

@@ -42,10 +42,6 @@ export function saveRemoteState(state: ApiState): Promise<ApiRecord> {
   return request('/api/state', { method: 'PUT', body: JSON.stringify({ state }) })
 }
 
-export function resetRemoteState(): Promise<ApiRecord> {
-  return request('/api/reset', { method: 'POST' })
-}
-
 export type ReportResult = {
   id: string
   operator: string
