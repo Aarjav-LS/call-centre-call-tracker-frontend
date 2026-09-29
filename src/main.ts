@@ -131,17 +131,25 @@ function toDateKey(year: number, month: number, day: number): string {
   return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-function parseDateKey(key: string): { year: number; month: number; day: number } {
+function parseDateKey(key: string): {
+  year: number;
+  month: number;
+  day: number;
+} {
   const [year, month, day] = key.split("-").map(Number);
   return { year, month: month - 1, day };
 }
 
-function formatDateKey(key: string, options?: Intl.DateTimeFormatOptions): string {
+function formatDateKey(
+  key: string,
+  options?: Intl.DateTimeFormatOptions,
+): string {
   if (!DATE_PATTERN.test(key)) return "";
   const { year, month, day } = parseDateKey(key);
-  return new Intl.DateTimeFormat("en-GB", options ?? { day: "2-digit", month: "short", year: "numeric" }).format(
-    new Date(year, month, day),
-  );
+  return new Intl.DateTimeFormat(
+    "en-GB",
+    options ?? { day: "2-digit", month: "short", year: "numeric" },
+  ).format(new Date(year, month, day));
 }
 
 function isProspectStatus(value: unknown): value is ProspectStatus {
@@ -155,9 +163,9 @@ function sanitizeProspects(input: unknown): VisitProspect[] {
       const item = entry as Partial<VisitProspect> | null;
       return Boolean(
         item &&
-          typeof item === "object" &&
-          typeof item.name === "string" &&
-          item.name.trim(),
+        typeof item === "object" &&
+        typeof item.name === "string" &&
+        item.name.trim(),
       );
     })
     .map((entry) => ({
@@ -196,14 +204,22 @@ function loadDashboardCleared(): Set<string> {
     if (!raw) return new Set();
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return new Set();
-    return new Set(parsed.filter((key): key is string => typeof key === "string" && DATE_PATTERN.test(key)));
+    return new Set(
+      parsed.filter(
+        (key): key is string =>
+          typeof key === "string" && DATE_PATTERN.test(key),
+      ),
+    );
   } catch {
     return new Set();
   }
 }
 
 function saveDashboardCleared(): void {
-  localStorage.setItem(DASHBOARD_CLEARED_KEY, JSON.stringify([...dashboardCleared]));
+  localStorage.setItem(
+    DASHBOARD_CLEARED_KEY,
+    JSON.stringify([...dashboardCleared]),
+  );
 }
 
 function downloadProspectsBackup(): void {
@@ -236,7 +252,8 @@ function applyProspectsBackup(raw: string): void {
   try {
     parsed = JSON.parse(raw);
   } catch {
-    reportStatus = "That file is not valid JSON. Choose a file downloaded from this page.";
+    reportStatus =
+      "That file is not valid JSON. Choose a file downloaded from this page.";
     render();
     return;
   }
@@ -244,7 +261,10 @@ function applyProspectsBackup(raw: string): void {
     ? parsed
     : (parsed as { prospects?: unknown } | null)?.prospects;
   const restored = sanitizeProspects(incoming);
-  if (!Array.isArray(incoming) || (incoming.length > 0 && restored.length === 0)) {
+  if (
+    !Array.isArray(incoming) ||
+    (incoming.length > 0 && restored.length === 0)
+  ) {
     reportStatus = "That file does not contain a usable prospect list.";
     render();
     return;
@@ -284,7 +304,9 @@ function todayKey(): string {
 
 const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-function countsByDate(list: VisitProspect[]): Map<string, Record<ProspectStatus, number>> {
+function countsByDate(
+  list: VisitProspect[],
+): Map<string, Record<ProspectStatus, number>> {
   const map = new Map<string, Record<ProspectStatus, number>>();
   for (const prospect of list) {
     if (!DATE_PATTERN.test(prospect.visitDate)) continue;
@@ -298,7 +320,11 @@ function countsByDate(list: VisitProspect[]): Map<string, Record<ProspectStatus,
   return map;
 }
 
-function shiftMonth(year: number, month: number, delta: number): { year: number; month: number } {
+function shiftMonth(
+  year: number,
+  month: number,
+  delta: number,
+): { year: number; month: number } {
   const date = new Date(year, month + delta, 1);
   return { year: date.getFullYear(), month: date.getMonth() };
 }
@@ -310,7 +336,11 @@ function buildCalendarCells(year: number, month: number): string[] {
   const start = new Date(year, month, 1 - mondayOffset);
   const cells: string[] = [];
   for (let index = 0; index < 42; index += 1) {
-    const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + index);
+    const day = new Date(
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate() + index,
+    );
     cells.push(toDateKey(day.getFullYear(), day.getMonth(), day.getDate()));
   }
   return cells;
@@ -542,17 +572,20 @@ function prospectRow(prospect: VisitProspect, index: number): string {
       `<option value="${status}" ${status === prospect.status ? "selected" : ""}>${PROSPECT_STATUS_LABELS[status]}</option>`,
   ).join("");
   return `<div class="prospect-row status-${prospect.status}">
-    <span class="prospect-name">${escapeHtml(prospect.name)}</span>
-    <span class="prospect-contact">${contact}</span>
-    <span class="prospect-date">${escapeHtml(formatDateKey(prospect.visitDate) || "Not set")}</span>
-    <span class="prospect-college">${prospect.college ? escapeHtml(prospect.college) : '<span class="prospect-blank">Not set</span>'}</span>
-    <span class="prospect-remarks">${remarks}</span>
+    <span class="prospect-name" data-label="Name">${escapeHtml(prospect.name)}</span>
+    <span class="prospect-contact" data-label="Contact">${contact}</span>
+    <span class="prospect-date" data-label="Visit date">${escapeHtml(formatDateKey(prospect.visitDate) || "Not set")}</span>
+    <span class="prospect-college" data-label="College">${prospect.college ? escapeHtml(prospect.college) : '<span class="prospect-blank">Not set</span>'}</span>
+    <span class="prospect-remarks" data-label="Remarks">${remarks}</span>
     <select class="status-select" data-role="status" data-index="${index}" aria-label="Status for ${escapeHtml(prospect.name)}">${options}</select>
     <button class="cluster-remove" data-action="remove-prospect" data-index="${index}" aria-label="Remove ${escapeHtml(prospect.name)}">&times;</button>
   </div>`;
 }
 
-function calendarCell(key: string, counts: Map<string, Record<ProspectStatus, number>>): string {
+function calendarCell(
+  key: string,
+  counts: Map<string, Record<ProspectStatus, number>>,
+): string {
   const { day } = parseDateKey(key);
   const entry = counts.get(key);
   const total = entry ? entry.prospect + entry.visited + entry.dead : 0;
@@ -576,11 +609,14 @@ function calendarCell(key: string, counts: Map<string, Record<ProspectStatus, nu
   </button>`;
 }
 
-function calendarBlock(counts: Map<string, Record<ProspectStatus, number>>): string {
+function calendarBlock(
+  counts: Map<string, Record<ProspectStatus, number>>,
+): string {
   const cells = buildCalendarCells(calendarYear, calendarMonth);
-  const monthLabel = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" }).format(
-    new Date(calendarYear, calendarMonth, 1),
-  );
+  const monthLabel = new Intl.DateTimeFormat("en-GB", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(calendarYear, calendarMonth, 1));
   const inMonth = (key: string) => parseDateKey(key).month === calendarMonth;
   return `<div class="calendar">
     <div class="calendar-head">
@@ -633,7 +669,9 @@ function clearDashboardToday(): void {
 
 function restoreDashboardToday(): void {
   const key = todayKey();
-  dashboardCleared = new Set([...dashboardCleared].filter((entry) => entry !== key));
+  dashboardCleared = new Set(
+    [...dashboardCleared].filter((entry) => entry !== key),
+  );
   saveDashboardCleared();
   reportStatus = "Today's prospects are showing on the dashboard again.";
   render();
@@ -694,7 +732,9 @@ function addProspect(values: Record<string, string>): void {
     render();
     return;
   }
-  const visitDate = DATE_PATTERN.test(values.visitDate ?? "") ? values.visitDate : "";
+  const visitDate = DATE_PATTERN.test(values.visitDate ?? "")
+    ? values.visitDate
+    : "";
   prospects = [
     ...prospects,
     {
@@ -708,7 +748,9 @@ function addProspect(values: Record<string, string>): void {
   ];
   saveProspects();
   if (dashboardCleared.has(todayKey())) {
-    dashboardCleared = new Set([...dashboardCleared].filter((entry) => entry !== todayKey()));
+    dashboardCleared = new Set(
+      [...dashboardCleared].filter((entry) => entry !== todayKey()),
+    );
     saveDashboardCleared();
   }
   if (visitDate) {
@@ -995,7 +1037,11 @@ app.addEventListener("click", (event) => {
     return;
   }
   if (action === "prev-month" || action === "next-month") {
-    const next = shiftMonth(calendarYear, calendarMonth, action === "next-month" ? 1 : -1);
+    const next = shiftMonth(
+      calendarYear,
+      calendarMonth,
+      action === "next-month" ? 1 : -1,
+    );
     calendarYear = next.year;
     calendarMonth = next.month;
     render();
@@ -1035,7 +1081,10 @@ app.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(form);
   if (kind === "cluster") {
-    addCluster(String(data.get("code") ?? ""), String(data.get("college") ?? ""));
+    addCluster(
+      String(data.get("code") ?? ""),
+      String(data.get("college") ?? ""),
+    );
     return;
   }
   addProspect({
@@ -1058,7 +1107,10 @@ app.addEventListener("input", (event) => {
 app.addEventListener("change", (event) => {
   const target = event.target as HTMLInputElement | HTMLSelectElement;
 
-  if (target instanceof HTMLInputElement && target.dataset.role === "restore-file") {
+  if (
+    target instanceof HTMLInputElement &&
+    target.dataset.role === "restore-file"
+  ) {
     handleBackupFile(target.files?.[0]);
     target.value = "";
     return;

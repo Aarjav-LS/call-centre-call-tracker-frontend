@@ -24,9 +24,9 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; min-width: 320px; background: var(--paper); }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 button { cursor: pointer; }
 
 .shell { min-height: 100vh; display: grid; grid-template-columns: 236px minmax(0, 1fr); }
@@ -268,56 +268,116 @@ button { cursor: pointer; }
 
 @media (max-width: 720px) {
   .shell { display: block; }
-  .rail { min-height: unset; padding: 16px 18px; }
-  .brand-lockup { padding: 0 0 15px; border-bottom: 0; }
-  .rail-section { display: none; }
-  .rail-footer { display: flex; justify-content: space-between; align-items: center; padding: 14px 0 0; border-top: 1px solid #3c4b46; }
-  .rail-actions { margin-top: 0; }
-  .main-content { padding: 25px 18px 20px; }
+  .rail { min-height: unset; padding: 14px 16px 12px; position: sticky; top: 0; z-index: 20; }
+  .brand-lockup { padding: 0 0 12px; border-bottom: 1px solid #3c4b46; }
+  .brand-mark { width: 28px; height: 28px; }
+  .brand-name { font-size: 19px; }
+  .rail-section { padding: 12px 0 0; }
+  .rail-label { display: none; }
+  .rail-nav { display: flex; gap: 8px; margin-top: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .rail-nav::-webkit-scrollbar { display: none; }
+  .nav-item { flex: 0 0 auto; min-height: 38px; padding: 0 14px; border-color: #3c4b46; font-size: 13px; }
+  .rail-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0 0; margin-top: 12px; border-top: 1px solid #3c4b46; }
+  .rail-actions { margin-top: 0; flex: 0 0 auto; }
+  .main-content { padding: 22px 16px 24px; }
   .topbar { display: block; }
-  .topbar-meta { margin-top: 18px; flex-wrap: wrap; white-space: normal; }
-  .intro-row { display: block; }
-  .save-state { margin-top: 16px; }
+  .topbar h1 { font-size: clamp(28px, 8.5vw, 40px); }
+  .topbar-meta { margin-top: 14px; flex-wrap: wrap; white-space: normal; padding-top: 0; }
+  .intro-row { display: block; padding: 18px 0 20px; }
+  .intro-copy { font-size: 14px; max-width: none; }
+  .save-state { margin-top: 14px; }
   .metrics-band { display: block; }
-  .metric-block { min-height: 144px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .metric-block { min-height: 132px; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px 16px 14px; }
   .metric-block:last-child { border-bottom: 0; }
-  .metric-anchor { min-height: 156px; }
-  .flow-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .metric-anchor { min-height: 144px; }
+  .metric-value { font-size: clamp(40px, 13vw, 60px); }
+  .metric-input { width: 100%; max-width: 150px; font-size: clamp(38px, 12vw, 56px); }
+  .metric-adjust { gap: 10px; }
+  .step-button { width: 40px; height: 40px; font-size: 20px; }
+  .flow-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .strip-label { grid-column: span 2; }
-  .flow-bar { grid-column: span 2; }
-  .rhythm-chart { gap: 7px; padding-inline: 0; }
-  .rhythm-bar-track { max-width: 42px; }
-  .rhythm-row { grid-template-columns: 25px minmax(110px, 1fr) minmax(70px, 1fr) 36px; gap: 8px; }
+  .flow-bar { grid-column: span 2; height: 10px; }
+  .strip-stat { padding-left: 0; border-left: 0; }
+  .rhythm-chart { gap: 6px; padding-inline: 0; min-height: 190px; }
+  .rhythm-bar-track { max-width: 34px; }
+  .rhythm-bar-column { height: 168px; }
+  .rhythm-row { grid-template-columns: 25px minmax(96px, 1fr) minmax(64px, 1fr) 36px; gap: 8px; }
+  .rhythm-big-number { font-size: clamp(52px, 16vw, 84px); }
+  .rhythm-lead { font-size: 13px; }
   .ledger-grid { display: block; }
   .outcome-row, .outcome-row:nth-child(odd) { border-right: 0; }
   .outcome-row:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
   .outcome-row:last-child { border-bottom: 0; }
+  .outcome-row { min-height: 62px; padding: 12px 14px; }
+  .outcome-label { font-size: 14px; }
+  .outcome-share { font-size: 9px; }
+  .outcome-code { width: 30px; height: 30px; font-size: 10px; }
+  .row-control { gap: 6px; }
+  .count-input { width: 52px; font-size: 17px; padding: 7px 2px; }
+  .section-heading { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .section-heading h2 { font-size: 24px; }
   .lower-grid { display: block; }
-  .note-panel { margin-top: 24px; }
+  .note-panel { margin-top: 24px; min-height: unset; }
+  .note-panel p { font-size: 20px; margin: 16px 0 22px; max-width: none; }
   .cluster-form { grid-template-columns: 1fr; }
+  .cluster-row { grid-template-columns: 80px minmax(0, 1fr) 34px; min-height: 48px; }
+  .cluster-remove { width: 34px; height: 34px; font-size: 22px; }
   .prospect-form { grid-template-columns: 1fr 1fr; }
   .prospect-form .field-wide { grid-column: 1 / -1; }
-  .prospect-form .cluster-add { grid-column: 1 / -1; }
+  .prospect-form .cluster-add { grid-column: 1 / -1; padding: 12px 18px; font-size: 13px; }
+  .cluster-input { padding: 11px 10px; font-size: 16px; }
   .prospect-calendar-grid { grid-template-columns: 1fr; }
   .backup-bar, .dashboard-actions, .dashboard-cleared, .visits-day-head { flex-direction: column; align-items: flex-start; }
+  .backup-actions { width: 100%; }
+  .backup-button { flex: 1 1 auto; text-align: center; padding: 12px 14px; }
   .prospect-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .prospect-summary .day-tile { padding: 9px 8px 11px; }
   .prospect-summary .day-tile-count { font-size: 24px; }
-  .cal-day { min-height: 50px; }
+  .calendar-head { padding: 12px 0 10px; }
+  .calendar-title { font-size: 19px; }
+  .cal-nav { width: 40px; height: 40px; font-size: 16px; }
+  .cal-day { min-height: 52px; padding: 6px 2px 5px; }
+  .cal-day-number { font-size: 11px; }
+  .cal-bubble { min-width: 18px; height: 18px; font-size: 10px; }
+  .cal-weekdays span { font-size: 8px; }
   .prospect-list { display: block; }
   .prospect-head { display: none; }
-  .prospect-row { grid-template-columns: minmax(0, 1fr) 26px; gap: 4px 10px; padding: 12px 0; }
-  .prospect-row > span { white-space: normal; }
-  .prospect-name { grid-column: 1; }
+  .prospect-row { grid-template-columns: minmax(0, 1fr) 34px; gap: 6px 10px; padding: 14px 0; }
+  .prospect-row > span { white-space: normal; overflow-wrap: anywhere; }
+  .prospect-row > span:not(.prospect-name) { display: flex; gap: 8px; align-items: baseline; font-size: 12px; }
+  .prospect-row > span:not(.prospect-name)::before {
+    content: attr(data-label);
+    flex: 0 0 66px;
+    color: var(--ink-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .prospect-name { grid-column: 1; font-size: 15px; }
   .prospect-contact, .prospect-date, .prospect-college, .prospect-remarks, .status-select { grid-column: 1; }
-  .prospect-row .cluster-remove { grid-column: 2; grid-row: 1; }
-  .page-footer { flex-wrap: wrap; }
+  .status-select { font-size: 16px; padding: 9px 8px; }
+  .prospect-row .cluster-remove { grid-column: 2; grid-row: 1; width: 34px; height: 34px; font-size: 22px; }
+  .page-footer { flex-wrap: wrap; gap: 8px 16px; }
+  .report-button { padding: 13px 14px; font-size: 13px; }
 }
 
 @media (max-width: 420px) {
   .outcome-row { padding-inline: 10px; gap: 10px; }
   .outcome-label { max-width: 145px; }
-  .outcome-code { width: 24px; height: 24px; }
+  .outcome-code { width: 26px; height: 26px; }
   .row-control { gap: 4px; }
-  .step-button { width: 26px; height: 26px; }
+  .step-button { width: 38px; height: 38px; }
+  .count-input { width: 46px; }
+  .nav-item { min-height: 36px; padding: 0 12px; font-size: 12px; }
+  .metric-adjust { gap: 6px; }
+  .metric-input { max-width: 120px; }
+  .cal-day { min-height: 46px; }
+  .cal-day-number { font-size: 10px; }
+  .cal-dots { gap: 2px; }
+  .cal-dot { width: 5px; height: 5px; }
+  .prospect-form { grid-template-columns: 1fr; }
+  .rhythm-row { grid-template-columns: 22px minmax(84px, 1fr) 30px; }
+  .rhythm-line { display: none; }
+  .prospect-row > span:not(.prospect-name)::before { flex-basis: 58px; }
 }
